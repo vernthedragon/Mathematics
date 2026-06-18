@@ -65,10 +65,10 @@ Dual numbers propagate derivatives automatically through arithmetic, making them
 // Differentiate f(x) = x² + 3x at x = 2
 // Seed with Dual(x, 1) — the 1 seeds the derivative
 Dual<double> x(2.0, 1.0);
-Dual<double> f = x * x + 3.0 * x;
+Dual<double> f = x * x + x * 3.0;
 
-double value     = f.real;  // f(2)  = 10.0
-double derivative = f.dual; // f'(2) = 7.0
+double value = f.re;  // f(2)  = 10.0
+double derivative = f.eps; // f'(2) = 7.0
 ```
 
 ---
