@@ -21,7 +21,7 @@ struct Complex {
     Complex operator*(const Complex& other) const {
         return Complex((this->re * other.re) - (this->im * other.im), (this->im * other.re) + (this->re * other.im));
     }
-    __COMPLEXFORCEINLINE Complex operator!() const {
+    __COMPLEXFORCEINLINE Complex operator~() const {
         return Complex(re, -im);
     }
     __COMPLEXFORCEINLINE Complex Conj() const {
