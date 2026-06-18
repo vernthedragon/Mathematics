@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 
-template <class Var>
+template <typename Var>
 struct Dual {
     Var re;
     Var eps;
