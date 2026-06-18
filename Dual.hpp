@@ -35,6 +35,12 @@ struct Dual {
     inline Dual operator-(const Var& scalar) const {
         return Dual(this->re - scalar, this->eps);
     }
+    __DUALFORCEINLINE Dual operator!() const { //conjugate operator
+        return Dual(re, -eps);
+    }
+    __DUALFORCEINLINE Dual Conj() const {
+        return Dual(re, -eps);
+    }
     Dual operator/(const Dual& other) const {
 
         if (other.re == 0) // ##! error handling for zero division in dual
@@ -50,10 +56,6 @@ struct Dual {
     }
     __DUALFORCEINLINE bool operator!=(const Dual& other) const {
         return !(this->operator==(other));
-    }
-    void operator=(const Dual& other) {
-        this->re = other.re;
-        this->eps = other.eps;
     }
     __DUALFORCEINLINE Var ang() const { return static_cast<Var>(this->eps / this->re); }
     __DUALFORCEINLINE Var abs() const { return this->re; }
