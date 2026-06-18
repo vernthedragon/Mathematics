@@ -28,6 +28,8 @@ Represents numbers of the form **a + bi** where **i² = −1**.
 | `.abs()` | Modulus \|z\| = √(a² + b²) |
 | `.abssqr()` | Squared modulus a² + b² |
 | `.ang()` | Argument θ = atan2(b, a) in radians |
+| `.re` | The real part *a* |
+| `.im` | The imaginary part *b* |
 
 ```cpp
 #include "Complex.hpp"
