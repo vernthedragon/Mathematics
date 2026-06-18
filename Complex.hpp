@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 template <class Var> 
 struct Complex {
