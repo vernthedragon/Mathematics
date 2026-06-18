@@ -38,7 +38,7 @@ struct Dual {
     __DUALFORCEINLINE Dual operator~() const { //conjugate operator
         return Dual(re, -eps);
     }
-    __DUALFORCEINLINE Dual Conj() const {
+    __DUALFORCEINLINE Dual conj() const {
         return Dual(re, -eps);
     }
     Dual operator/(const Dual& other) const {
