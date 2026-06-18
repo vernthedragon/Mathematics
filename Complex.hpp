@@ -24,7 +24,7 @@ struct Complex {
     __COMPLEXFORCEINLINE Complex operator~() const {
         return Complex(re, -im);
     }
-    __COMPLEXFORCEINLINE Complex Conj() const {
+    __COMPLEXFORCEINLINE Complex conj() const {
         return Complex(re, -im);
     }
     inline Complex operator*(const Var& scalar) const {
