@@ -1,6 +1,12 @@
 #pragma once
 #include <cmath>
 
+#if defined(_MSC_VER)
+#define __DUALFORCEINLINE __forceinline
+#else
+#define __DUALFORCEINLINE [[gnu::always_inline]]
+#endif
+
 template <typename Var>
 struct Dual {
     Var re;
@@ -19,6 +25,8 @@ struct Dual {
         return Dual(this->re * scalar, this->eps * scalar);
     }
     inline Dual operator/(const Var& scalar) const {
+        if (scalar == 0)
+            return *this;
         return Dual(this->re / scalar, this->eps / scalar);
     }
     inline Dual operator+(const Var& scalar) const {
@@ -30,26 +38,25 @@ struct Dual {
     Dual operator/(const Dual& other) const {
 
         if (other.re == 0) // ##! error handling for zero division in dual
-            return other;
+            return *this;
 
         return Dual(
             this->re / other.re,
             ((this->eps * other.re) - (this->re * other.eps)) / ((other.re * other.re))
             );
-
     }
-    __forceinline bool operator==(const Dual& other) const {
+    __DUALFORCEINLINE bool operator==(const Dual& other) const {
         return this->re == other.re && this->eps == other.eps;
     }
-    __forceinline bool operator!=(const Dual& other) const {
+    __DUALFORCEINLINE bool operator!=(const Dual& other) const {
         return !(this->operator==(other));
     }
     void operator=(const Dual& other) {
         this->re = other.re;
         this->eps = other.eps;
     }
-    __forceinline Var ang() const { return static_cast<Var>(this->eps / this->re); }
-    __forceinline Var abs() const { return this->re; }
+    __DUALFORCEINLINE Var ang() const { return static_cast<Var>(this->eps / this->re); }
+    __DUALFORCEINLINE Var abs() const { return this->re; }
 
 };
 
