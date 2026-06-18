@@ -45,9 +45,9 @@ struct Complex {
         this->re = other.re;
         this->im = other.im;
     }
-    __forceinline Var tan() const { return const_cast<Var>(this->im / this->re); }
-    __forceinline Var ang() const { return const_cast<Var>(atan2(this->im, this->re)); } //angle ##! improve performance with faster atan2
-    __forceinline Var abs() const { return const_cast<Var>(sqrt(this->re * this->re + this->im * this->im)); }
+    __forceinline Var tan() const { return static_cast<Var>(this->im / this->re); }
+    __forceinline Var ang() const { return static_cast<Var>(atan2(this->im, this->re)); } //angle ##! improve performance with faster atan2
+    __forceinline Var abs() const { return static_cast<Var>(sqrt(this->re * this->re + this->im * this->im)); }
     __forceinline Var abssqr() const { return (this->re * this->re + this->im * this->im); }
 };
 
