@@ -25,7 +25,7 @@ Represents numbers of the form **a + bi** where **i² = −1**.
 | `+`, `-`, `*`, `/` | Arithmetic between two complex numbers |
 | `+`, `-`, `*`, `/` with scalar | Mixed arithmetic with real scalars |
 | `==`, `!=` | Equality testing |
-| `~`, `.Conj` | Conjugate |
+| `~`, `.conj` | Conjugate |
 | `.abs()` | Modulus \|z\| = √(a² + b²) |
 | `.abssqr()` | Squared modulus a² + b² |
 | `.ang()` | Argument θ = atan2(b, a) in radians |
@@ -57,7 +57,7 @@ Dual numbers propagate derivatives automatically through arithmetic, making them
 | `+`, `-`, `*`, `/` | Arithmetic between two dual numbers |
 | `+`, `-`, `*`, `/` with scalar | Mixed arithmetic with real scalars |
 | `==`, `!=` | Equality testing |
-| `~`, `.Conj` | Conjugate |
+| `~`, `.conj` | Conjugate |
 | `.re` | The real part *a* |
 | `.eps` | The dual (infinitesimal) part *b* |
 
