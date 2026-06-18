@@ -21,6 +21,12 @@ struct Complex {
     Complex operator*(const Complex& other) const {
         return Complex((this->re * other.re) - (this->im * other.im), (this->im * other.re) + (this->re * other.im));
     }
+    __COMPLEXFORCEINLINE Complex operator!() const {
+        return Complex(re, -im);
+    }
+    __COMPLEXFORCEINLINE Complex Conj() const {
+        return Complex(re, -im);
+    }
     inline Complex operator*(const Var& scalar) const {
         return Complex(this->re * scalar, this->im * scalar);
     }
@@ -51,10 +57,7 @@ struct Complex {
     __COMPLEXFORCEINLINE bool operator!=(const Complex& other) const {
         return !(this->operator==(other));
     }
-    void operator=(const Complex& other) {
-        this->re = other.re;
-        this->im = other.im;
-    }
+
     __COMPLEXFORCEINLINE Var slope() const { return static_cast<Var>(this->im / this->re); }
     __COMPLEXFORCEINLINE Var ang() const { return static_cast<Var>(atan2(this->im, this->re)); } //angle ##! improve performance with faster atan2
     __COMPLEXFORCEINLINE Var abs() const { return static_cast<Var>(sqrt(this->re * this->re + this->im * this->im)); }
