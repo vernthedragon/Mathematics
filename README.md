@@ -88,7 +88,6 @@ No installation, no `cmake`, no linking required.
 
 ## Requirements
 
-- C++11 or later
 - A standard-conforming C++ compiler (GCC, Clang, MSVC)
 
 ---
