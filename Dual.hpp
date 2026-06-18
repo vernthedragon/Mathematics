@@ -35,7 +35,7 @@ struct Dual {
     inline Dual operator-(const Var& scalar) const {
         return Dual(this->re - scalar, this->eps);
     }
-    __DUALFORCEINLINE Dual operator!() const { //conjugate operator
+    __DUALFORCEINLINE Dual operator~() const { //conjugate operator
         return Dual(re, -eps);
     }
     __DUALFORCEINLINE Dual Conj() const {
