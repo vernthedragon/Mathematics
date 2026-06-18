@@ -48,7 +48,7 @@ struct Dual {
         this->re = other.re;
         this->eps = other.eps;
     }
-    __forceinline Var ang() const { return const_cast<Var>(this->eps / this->re); }
+    __forceinline Var ang() const { return static_cast<Var>(this->eps / this->re); }
     __forceinline Var abs() const { return this->re; }
 
 };
