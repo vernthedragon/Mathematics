@@ -12,6 +12,9 @@ struct Dual {
     Var re;
     Var eps;
     Dual(Var real = 0, Var epsilon = 0) : re(real), eps(epsilon) {};
+    template <typename VarOther>
+    Dual(Dual<VarOther> other) : re(other.re), eps(other.eps) {};
+ 
     inline Dual operator+(const Dual& other) const {
         return Dual(this->re + other.re, this->eps + other.eps);
     }
@@ -63,3 +66,18 @@ struct Dual {
 };
 
 
+#ifndef __DUALHPP
+#define __DUALHPP
+template <typename Var>
+inline Dual<Var> sin(Dual<Var> number) {
+    return Dual<Var>(sin(number.re), cos(number.re));
+}
+template <typename Var>
+inline Dual<Var> cos(Dual<Var> number) {
+    return Dual<Var>(cos(number.re), -sin(number.re));
+}
+template <typename Var>
+inline Dual<Var> exp(Dual<Var> number) {
+    return Dual<Var>(exp(number.re), exp(number.re) * number.im);
+}
+#endif
