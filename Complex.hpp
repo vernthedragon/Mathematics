@@ -12,6 +12,8 @@ struct Complex {
     Var re;
     Var im;
     Complex(Var real = 0, Var imaginary = 0) : re(real), im(imaginary) {};
+    template <typename VarOther>
+    Complex(Complex<VarOther> other) : re(other.re), im(other.im) {};
     inline Complex operator+(const Complex& other) const {
         return Complex(this->re + other.re, this->im + other.im);
     }
@@ -65,3 +67,18 @@ struct Complex {
 };
 
 
+#ifndef __COMPLEXHPP
+#define __COMPLEXHPP
+template <typename Var>
+inline Complex<Var> sin(Complex<Var> number) {
+    return Complex<Var>(sin(number.re) * cosh(number.im), cos(number.re) * sinh(number.im));
+}
+template <typename Var>
+inline Complex<Var> cos(Complex<Var> number) {
+    return Complex<Var>(cos(number.re) * cosh(number.im), -sin(number.re) * sinh(number.im));
+}
+template <typename Var>
+inline Complex<Var> exp(Complex<Var> number) {
+    return Complex<Var>(exp(number.re)*cos(number.im), exp(number.re) * sin(number.im));
+}
+#endif
