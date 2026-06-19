@@ -24,13 +24,15 @@ struct Dual {
     Dual operator*(const Dual& other) const {
         return Dual(this->re * other.re, (this->eps * other.re) + (this->re * other.eps));
     }
-    inline Dual operator*(const Var& scalar) const {
-        return Dual(this->re * scalar, this->eps * scalar);
+    template <typename VarOther>
+    inline Dual operator*(const VarOther& scalar) const {
+        return Dual(this->re * static_cast<Var>(scalar), this->eps * static_cast<Var>(scalar));
     }
-    inline Dual operator/(const Var& scalar) const {
+    template <typename VarOther>
+    inline Dual operator/(const VarOther& scalar) const {
         if (scalar == 0)
             return *this;
-        return Dual(this->re / scalar, this->eps / scalar);
+        return Dual(this->re / static_cast<Var>(scalar), this->eps / static_cast<Var>(scalar));
     }
     inline Dual operator+(const Var& scalar) const {
         return Dual(this->re + scalar, this->eps);
