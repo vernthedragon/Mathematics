@@ -29,13 +29,15 @@ struct Complex {
     __COMPLEXFORCEINLINE Complex conj() const {
         return Complex(re, -im);
     }
-    inline Complex operator*(const Var& scalar) const {
-        return Complex(this->re * scalar, this->im * scalar);
+    template <typename VarOther>
+    inline Complex operator*(const VarOther& scalar) const {
+        return Complex(this->re * static_cast<Var>(scalar), this->im * static_cast<Var>(scalar));
     }
-    inline Complex operator/(const Var& scalar) const {
+    template <typename VarOther>
+    inline Complex operator/(const VarOther& scalar) const {
         if (scalar == 0)
             return *this;
-        return Complex(this->re / scalar, this->im / scalar);
+        return Complex(this->re / static_cast<Var>(scalar), this->im / static_cast<Var>(scalar));
     }
     inline Complex operator+(const Var& scalar) const {
         return Complex(this->re + scalar, this->im);
