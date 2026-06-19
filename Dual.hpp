@@ -80,6 +80,6 @@ inline Dual<Var> cos(Dual<Var> number) {
 }
 template <typename Var>
 inline Dual<Var> exp(Dual<Var> number) {
-    return Dual<Var>(exp(number.re), exp(number.re) * number.im);
+    return Dual<Var>(exp(number.re), exp(number.re) * number.eps);
 }
 #endif
