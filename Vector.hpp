@@ -8,6 +8,13 @@
 //#define __VECTORFORCEAVX512
 //#define __VECTORFORCESEEORNEON
 #define __VECTORSEGMENTATIONCHECKS
+#define __VECTORDISABLEINLINEFOROPERANDS //disable inline because it makes large code when using SIMD
+
+#if defined (__VECTORDISABLEINLINEFOROPERANDS)
+#define __VECOPINLINE
+#else
+#define __VECOPINLINE inline
+#endif
 
 #if defined (__VECTORFORCEAVX2)
 #define __VECTOR8FLOAT4DOUBLE
@@ -75,7 +82,7 @@ struct HelperIsSameType<T, T> {
 template <size_t N, typename Var = float>
 struct Vector {
 
-#ifdef defined (__VECTOR16FLOAT8DOUBLE)
+#if defined (__VECTOR16FLOAT8DOUBLE)
  
 #elif defined (__VECTOR8FLOAT4DOUBLE)
     static constexpr unsigned long long Alignment = (HelperIsSameType<Var, float>::value || HelperIsSameType<Var, double>::value || HelperIsSameType<Var, int>::value) ? 32 : alignof(Var) ;
@@ -92,7 +99,7 @@ struct Vector {
     Vector(Args... args) { 
         static_assert((sizeof...(Args)) <= N, "Vector | Cannot initialize Vector with more elements than container size");
 
-#ifdef defined (__VECTOR16FLOAT8DOUBLE) //##! ADD EXTENDED VECTOR OPERATION OPTIMIZATION
+#if defined (__VECTOR16FLOAT8DOUBLE) //##! ADD EXTENDED VECTOR OPERATION OPTIMIZATION
 
 #elif defined (__VECTOR8FLOAT4DOUBLE)
         
@@ -103,7 +110,7 @@ struct Vector {
         ((comp[n++] = static_cast<Var>(args)), ...);
         n = sizeof...(Args); 
 
-#ifdef defined (__VECTOR16FLOAT8DOUBLE) 
+#if defined (__VECTOR16FLOAT8DOUBLE) 
 
 #elif defined (__VECTOR8FLOAT4DOUBLE)
 
@@ -140,22 +147,7 @@ struct Vector {
             }
             return;
         }
-        else if constexpr (HelperIsSameType<Var, int>::value) {
-            size_t nearest8 = __VECTORROUND_UP_8(n);
-            while (n < nearest8) { comp[n] = 0; n++; } //32 byte alignment, 8 ints
-
-            __m256i zero_vec = _mm256_setzero_si256();
-            while (n < N) {
-
-
-                _mm256_storeu_si256((__m256i*)&comp[n], zero_vec);
-
-                n += 8;
-
-            }
-            return;
-        }
-        
+      
 #elif defined (__VECTOR4FLOAT2DOUBLE)
 
 #endif
@@ -173,26 +165,88 @@ struct Vector {
     __VECTORFORCEINLINE Var& operator()(size_t index) {
         return operator[](index);
     }
-    inline Vector operator+(const Vector& other) const {
-        Vector ret(true, 'a');
-        for (int i = 0; i < N; i++) {
-            ret.comp[i] = this->comp[i] + other.comp[i];
-        }
-        return ret;
-#ifdef defined (__VECTOR16FLOAT8DOUBLE)
+    __VECOPINLINE Vector operator+(const Vector& other) const {
+
+#if defined (__VECTOR16FLOAT8DOUBLE)
 
 #elif defined (__VECTOR8FLOAT4DOUBLE)
+        if constexpr (HelperIsSameType<Var, float>::value) {
+            __m256 Left, Right, Sum;
+            Vector ret(true, 'a');
+            for (size_t i = 0; i < N; i += 8) {
+              
+                Left = _mm256_load_ps(&comp[i]);
+                Right = _mm256_load_ps(&other.comp[i]);
+                Sum = _mm256_add_ps(Left, Right);
+                _mm256_store_ps(&ret.comp[i], Sum);
+            }
+            return ret;
+        }
+        else if constexpr (HelperIsSameType<Var, double>::value) {
+            __m256d Left, Right, Sum;
+            Vector ret(true, 'a');
+            for (size_t i = 0; i < N; i += 4) {
 
+                Left = _mm256_load_pd(&comp[i]);
+                Right = _mm256_load_pd(&other.comp[i]);
+                Sum = _mm256_add_pd(Left, Right);
+                _mm256_store_pd(&ret.comp[i], Sum);
+            }
+            return ret;
+        }
+       
 #elif defined (__VECTOR4FLOAT2DOUBLE)
 
-#else
+#endif
 
         Vector ret(true, 'a');
         for (int i = 0; i < N; i++) {
             ret.comp[i] = this->comp[i] + other.comp[i];
         }
         return ret;
+
+    }
+
+    __VECOPINLINE Vector operator-(const Vector& other) const {
+
+#if defined (__VECTOR16FLOAT8DOUBLE)
+
+#elif defined (__VECTOR8FLOAT4DOUBLE)
+        if constexpr (HelperIsSameType<Var, float>::value) {
+            __m256 Left, Right, Sum;
+            Vector ret(true, 'a');
+            for (size_t i = 0; i < N; i += 8) {
+
+                Left = _mm256_load_ps(&comp[i]);
+                Right = _mm256_load_ps(&other.comp[i]);
+                Sum = _mm256_sub_ps(Left, Right);
+                _mm256_store_ps(&ret.comp[i], Sum);
+            }
+            return ret;
+        }
+        else if constexpr (HelperIsSameType<Var, double>::value) {
+            __m256d Left, Right, Sum;
+            Vector ret(true, 'a');
+            for (size_t i = 0; i < N; i += 4) {
+
+                Left = _mm256_load_pd(&comp[i]);
+                Right = _mm256_load_pd(&other.comp[i]);
+                Sum = _mm256_sub_pd(Left, Right);
+                _mm256_store_pd(&ret.comp[i], Sum);
+            }
+            return ret;
+        }
+       
+#elif defined (__VECTOR4FLOAT2DOUBLE)
+
 #endif
+
+        Vector ret(true, 'a');
+        for (int i = 0; i < N; i++) {
+            ret.comp[i] = this->comp[i] - other.comp[i];
+        }
+        return ret;
+
     }
 
 };
